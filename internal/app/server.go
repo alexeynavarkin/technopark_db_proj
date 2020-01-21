@@ -10,6 +10,7 @@ import (
 	"github.com/valyala/fasthttp"
 	"log"
 	"os"
+	"time"
 )
 
 const PORT = "5000"
@@ -35,9 +36,10 @@ func newDB() (*sqlx.DB, error) {
 	}
 	db.SetMaxOpenConns(8)
 	db.SetMaxIdleConns(8)
-	err = db.Ping()
-	if err != nil {
-		return nil, err
+
+	for err := db.Ping(); err != nil; err = db.Ping() {
+		fmt.Println("Error connecting to db. Waiting more.")
+		time.Sleep(100 * time.Millisecond)
 	}
 	return db, nil
 }
