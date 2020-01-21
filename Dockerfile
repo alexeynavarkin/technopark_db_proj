@@ -12,9 +12,7 @@ FROM postgres:12-alpine
 WORKDIR /app
 
 COPY --from=builder /build/server .
-RUN ls
-RUN pwd
-
+COPY conf/postgres.conf /etc/postgresql/12/main/postgresql.conf
 COPY db/migrations/000_initial.sql /docker-entrypoint-initdb.d
 COPY scripts/start.sh /docker-entrypoint-initdb.d
 
